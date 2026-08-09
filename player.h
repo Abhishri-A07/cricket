@@ -7,18 +7,18 @@ struct Player
     char name[30];
     char role[20];
 
-    int pruns;
-    int pwickets;
+    int pruns,runs;
+    int pwickets,wickets;
     float strikeRate;
     float economy;
     float performance;
     float basePrice;
 
-    int ballsFaced;
-    int out;
+    int ballsfaced;
+    int isout;
 
     int ballsBowled;
-    int runsConceded;
+    int runsgiven;
 
     struct Player *prev;
     struct Player *next;
@@ -37,5 +37,6 @@ void updatePlayer();
 void deletePlayer();
 void displayAllPlayers();
 void freeDatabase();
+void play(struct Player *head,int totalOvers);
 
 #endif
