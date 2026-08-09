@@ -38,7 +38,9 @@ void addPlayer()
     printf("Enter Strike Rate: ");
     scanf("%f", &newPlayer->strikeRate);
     printf("Enter Economy: ");
-    scanf("%f", &newPlayer->economy)
+    scanf("%f", &newPlayer->economy);
+    printf("Enter base price: ");
+    scanf("%d", &newPlayer->baseprice)  
     newPlayer->prev = NULL;
     newPlayer->next = NULL;
     if (head == NULL)
