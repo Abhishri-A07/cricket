@@ -1,25 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include "player.h"
 
 #define INITIAL_BUDGET 100.0f
-
-typedef struct Player
-{
-    int id;
-    char name[30];
-    char role[20];
-
-    int runs;
-    int wickets;
-    float strikeRate;
-    float economy;
-    float performance;
-    float basePrice;
-
-    struct Player *prev;
-    struct Player *next;
-
-} Player;
 
 typedef struct
 {
