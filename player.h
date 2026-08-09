@@ -7,8 +7,8 @@ struct Player
     char name[30];
     char role[20];
 
-    int runs;
-    int wickets;
+    int pruns;
+    int pwickets;
     float strikeRate;
     float economy;
     float performance;
