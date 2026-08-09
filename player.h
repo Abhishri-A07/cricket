@@ -12,6 +12,7 @@ struct Player
     float strikeRate;
     float economy;
     float performance;
+    float basePrice;
 
     int ballsFaced;
     int out;
