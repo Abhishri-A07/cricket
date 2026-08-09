@@ -1,19 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-struct Player
-{
-    int id;
-    char name[30];
-    char role[20];
-    int runs;
-    int wickets;
-    float strikeRate;
-    float economy;
-    float performance;
-    struct Player *prev;
-    struct Player *next;
-};
+#include "player.h"
+
 struct Player *head = NULL;
 struct Player *tail = NULL;
 float calculatePerformance(struct Player *p)
@@ -204,45 +193,4 @@ void freeDatabase()
    head = NULL;
     tail = NULL;
 }
-int main()
-{
-    int choice;
-    do
-    {
-        printf("\n\n========== CRICKET PLAYER DATABASE ==========\n");
-        printf("1. Add Player\n");
-        printf("2. Delete Player\n");
-        printf("3. Search Player\n");
-        printf("4. Update Player\n");
-        printf("5. Display All Players\n");
-        printf("6. Exit\n");
-        printf("=============================================\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-        switch (choice)
-        {
-            case 1:
-               addPlayer();
-                break;
-           case 2:
-                deletePlayer();
-                break;
-           case 3:
-                searchAndDisplay();
-                break;
-           case 4:
-                updatePlayer();
-                break;
-           case 5:
-                displayAllPlayers();
-                break;
-           case 6:
-                freeDatabase();
-                printf("\nPlayer database closed.\n");
-                break;
-           default:
-                printf("\nInvalid choice! Try again.\n");
-        }
-    } while (choice != 6);
-      return 0;
-}
+
