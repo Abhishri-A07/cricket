@@ -38,8 +38,7 @@ void addPlayer()
     printf("Enter Strike Rate: ");
     scanf("%f", &newPlayer->strikeRate);
     printf("Enter Economy: ");
-    scanf("%f", &newPlayer->economy);
-    newPlayer->performance = calculatePerformance(newPlayer);
+    scanf("%f", &newPlayer->economy)
     newPlayer->prev = NULL;
     newPlayer->next = NULL;
     if (head == NULL)
