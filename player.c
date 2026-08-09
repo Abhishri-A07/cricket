@@ -40,7 +40,7 @@ void addPlayer()
     printf("Enter Economy: ");
     scanf("%f", &newPlayer->economy);
     printf("Enter base price: ");
-    scanf("%d", &newPlayer->basePrice)  
+    scanf("%d", &newPlayer->basePrice); 
     newPlayer->prev = NULL;
     newPlayer->next = NULL;
     if (head == NULL)
@@ -77,7 +77,7 @@ void displayPlayer(struct Player *p)
     printf("Wickets         : %d\n", p->pwickets);
     printf("Strike Rate     : %.2f\n", p->strikeRate);
     printf("Economy         : %.2f\n", p->economy);
-    printf("Performance     : %.2f\n", p->performance);
+    printf("Base price      : %.2f\n", p->basePrice);
     printf("----------------------------------------\n");
 }
 void searchAndDisplay()
