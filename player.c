@@ -99,7 +99,7 @@ void searchAndDisplay()
 void updatePlayer()
 {
     int id;
-   printf("\nEnter Player ID to update: ");
+    printf("\nEnter Player ID to update: ");
     scanf("%d", &id);
     struct Player *p = searchPlayer(id);
     if (p == NULL)
@@ -119,6 +119,8 @@ void updatePlayer()
     scanf("%f", &p->strikeRate);
     printf("Enter New Economy: ");
     scanf("%f", &p->economy);
+    printf("Enter base price: ");
+    scanf("%d", &newPlayer->basePrice); 
     p->performance = calculatePerformance(p);
     printf("\nPlayer details updated successfully!\n");
 }
@@ -170,7 +172,7 @@ void displayAllPlayers()
         printf("\nWickets     : %d", temp->pwickets);
         printf("\nStrike Rate : %.2f", temp->strikeRate);
         printf("\nEconomy     : %.2f", temp->economy);
-        printf("\nPerformance : %.2f", temp->performance);
+        printf("Base price      : %.2f\n", p->basePrice);
         printf("\n-----------------------------------------------");
        temp = temp->next;
     }
