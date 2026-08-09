@@ -40,7 +40,7 @@ void addPlayer()
     printf("Enter Economy: ");
     scanf("%f", &newPlayer->economy);
     printf("Enter base price: ");
-    scanf("%d", &newPlayer->baseprice)  
+    scanf("%d", &newPlayer->basePrice)  
     newPlayer->prev = NULL;
     newPlayer->next = NULL;
     if (head == NULL)
