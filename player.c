@@ -5,18 +5,24 @@
 
 struct Player *head = NULL;
 struct Player *tail = NULL;
+
 void addPlayer()
 {
     struct Player *newPlayer;
+
     newPlayer = (struct Player *)malloc(sizeof(struct Player));
+
     if (newPlayer == NULL)
     {
         printf("Memory allocation failed!\n");
         return;
     }
+
     printf("\nEnter Player ID: ");
     scanf("%d", &newPlayer->id);
+
     struct Player *temp = head;
+
     while (temp != NULL)
     {
         if (temp->id == newPlayer->id)
@@ -25,24 +31,43 @@ void addPlayer()
             free(newPlayer);
             return;
         }
-    temp = temp->next;
+
+        temp = temp->next;
     }
+
     printf("Enter Player Name: ");
     scanf(" %[^\n]", newPlayer->name);
-    printf("Enter Player Role (Batsman/Bowler/All-Rounder): ");
+
+    printf("Enter Player Role (BATSMAN/BOWLER/ALLROUNDER): ");
     scanf(" %[^\n]", newPlayer->role);
+
     printf("Enter Previous Runs: ");
     scanf("%d", &newPlayer->pruns);
+
     printf("Enter Previous Wickets: ");
     scanf("%d", &newPlayer->pwickets);
+
     printf("Enter Strike Rate: ");
     scanf("%f", &newPlayer->strikeRate);
+
     printf("Enter Economy: ");
     scanf("%f", &newPlayer->economy);
-    printf("Enter base price: ");
-    scanf("%d", &newPlayer->basePrice); 
+
+    printf("Enter Base Price: ");
+    scanf("%f", &newPlayer->basePrice);
+
+    /* Initialize match statistics */
+    newPlayer->runs = 0;
+    newPlayer->wickets = 0;
+    newPlayer->performance = 0;
+    newPlayer->ballsfaced = 0;
+    newPlayer->isout = 0;
+    newPlayer->ballsBowled = 0;
+    newPlayer->runsgiven = 0;
+
     newPlayer->prev = NULL;
     newPlayer->next = NULL;
+
     if (head == NULL)
     {
         head = newPlayer;
@@ -54,19 +79,25 @@ void addPlayer()
         newPlayer->prev = tail;
         tail = newPlayer;
     }
+
     printf("\nPlayer added successfully!\n");
 }
+
 struct Player *searchPlayer(int id)
 {
     struct Player *temp = head;
+
     while (temp != NULL)
     {
         if (temp->id == id)
             return temp;
-       temp = temp->next;
+
+        temp = temp->next;
     }
-return NULL;
+
+    return NULL;
 }
+
 void displayPlayer(struct Player *p)
 {
     printf("\n----------------------------------------\n");
@@ -74,18 +105,22 @@ void displayPlayer(struct Player *p)
     printf("Name            : %s\n", p->name);
     printf("Role            : %s\n", p->role);
     printf("Previous Runs   : %d\n", p->pruns);
-    printf("Wickets         : %d\n", p->pwickets);
+    printf("Previous Wickets: %d\n", p->pwickets);
     printf("Strike Rate     : %.2f\n", p->strikeRate);
     printf("Economy         : %.2f\n", p->economy);
-    printf("Base price      : %.2f\n", p->basePrice);
+    printf("Base Price      : %.2f\n", p->basePrice);
     printf("----------------------------------------\n");
 }
+
 void searchAndDisplay()
 {
     int id;
+
     printf("\nEnter Player ID to search: ");
     scanf("%d", &id);
+
     struct Player *p = searchPlayer(id);
+
     if (p == NULL)
     {
         printf("Player not found!\n");
@@ -96,74 +131,91 @@ void searchAndDisplay()
         displayPlayer(p);
     }
 }
+
 void updatePlayer()
 {
     int id;
+
     printf("\nEnter Player ID to update: ");
     scanf("%d", &id);
+
     struct Player *p = searchPlayer(id);
+
     if (p == NULL)
     {
         printf("Player not found!\n");
         return;
     }
+
     printf("\nEnter New Player Name: ");
     scanf(" %[^\n]", p->name);
+
     printf("Enter New Role: ");
     scanf(" %[^\n]", p->role);
+
     printf("Enter New Previous Runs: ");
     scanf("%d", &p->pruns);
+
     printf("Enter New Wickets: ");
     scanf("%d", &p->pwickets);
+
     printf("Enter New Strike Rate: ");
     scanf("%f", &p->strikeRate);
+
     printf("Enter New Economy: ");
     scanf("%f", &p->economy);
-    printf("Enter base price: ");
-    scanf("%d", &newPlayer->basePrice); 
-    p->performance = calculatePerformance(p);
+
+    printf("Enter New Base Price: ");
+    scanf("%f", &p->basePrice);
+
     printf("\nPlayer details updated successfully!\n");
 }
+
 void deletePlayer()
 {
     int id;
+
     printf("\nEnter Player ID to delete: ");
     scanf("%d", &id);
+
     struct Player *p = searchPlayer(id);
+
     if (p == NULL)
     {
         printf("Player not found!\n");
         return;
     }
-   if (p == head)
-    {
+
+    if (p == head)
         head = p->next;
-    }
+
     if (p == tail)
-    {
         tail = p->prev;
-    }
-   if (p->prev != NULL)
-    {
+
+    if (p->prev != NULL)
         p->prev->next = p->next;
-    }
-   if (p->next != NULL)
-    {
+
+    if (p->next != NULL)
         p->next->prev = p->prev;
-    }
-   free(p);
-   printf("\nPlayer deleted successfully!\n");
+
+    free(p);
+
+    printf("\nPlayer deleted successfully!\n");
 }
+
 void displayAllPlayers()
 {
     struct Player *temp = head;
+
     if (head == NULL)
     {
         printf("\nNo players available in database.\n");
         return;
     }
-      printf("\n================ PLAYER DATABASE ================\n");
-      while (temp != NULL)
+
+    printf("\n================ PLAYER DATABASE ================\n");
+
+    while (temp != NULL)
     {
         printf("\nID          : %d", temp->id);
         printf("\nName        : %s", temp->name);
@@ -172,21 +224,24 @@ void displayAllPlayers()
         printf("\nWickets     : %d", temp->pwickets);
         printf("\nStrike Rate : %.2f", temp->strikeRate);
         printf("\nEconomy     : %.2f", temp->economy);
-        printf("Base price      : %.2f\n", p->basePrice);
-        printf("\n-----------------------------------------------");
-       temp = temp->next;
+        printf("\nBase Price  : %.2f\n", temp->basePrice);
+        printf("-----------------------------------------------\n");
+
+        temp = temp->next;
     }
 }
+
 void freeDatabase()
 {
     struct Player *temp = head;
+
     while (temp != NULL)
     {
         struct Player *next = temp->next;
         free(temp);
         temp = next;
     }
-   head = NULL;
+
+    head = NULL;
     tail = NULL;
 }
-
