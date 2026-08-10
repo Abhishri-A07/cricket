@@ -2,171 +2,131 @@
 #include <string.h>
 #include "player.h"
 
-void batting(struct Player *striker, int runs, int wicket)
+
+void initializeQueue(Queue *q)
 {
-    striker->ballsfaced++;
-
-    if (wicket == 1)
-    {
-        striker->isout = 1;
-
-        printf("\n%s is OUT!\n", striker->name);
-    }
-    else
-    {
-        striker->runs += runs;
-    }
+    q->front = 0;
+    q->rear = -1;
 }
 
-void bowling(struct Player *bowler, int runs, int wicket)
+
+void enqueue(Queue *q,
+             int no,
+             int runs,
+             int wicket,
+             const char result[])
 {
-    bowler->ballsBowled++;
-    bowler->runsgiven += runs;
-
-    if (wicket == 1)
-    {
-        bowler->wickets++;
-    }
-}
-
-void play(struct Player *head, int totalOvers)
-{
-    struct Player *striker = NULL;
-    struct Player *nonstriker = NULL;
-    struct Player *bowler = NULL;
-    struct Player *temp;
-
-    int runs;
-    int wicket;
-    int ball;
-    int over;
-
-    /* Find first two batsmen */
-    temp = head;
-
-    while (temp != NULL)
-    {
-        if (strcmp(temp->role, "BATSMAN") == 0 ||
-            strcmp(temp->role, "ALLROUNDER") == 0)
-        {
-            if (striker == NULL)
-            {
-                striker = temp;
-            }
-            else if (nonstriker == NULL)
-            {
-                nonstriker = temp;
-                break;
-            }
-        }
-
-        temp = temp->next;
-    }
-
-    /* Find first bowler */
-    temp = head;
-
-    while (temp != NULL)
-    {
-        if (strcmp(temp->role, "BOWLER") == 0 ||
-            strcmp(temp->role, "ALLROUNDER") == 0)
-        {
-            bowler = temp;
-            break;
-        }
-
-        temp = temp->next;
-    }
-
-    if (striker == NULL ||
-        nonstriker == NULL ||
-        bowler == NULL)
-    {
-        printf("\nNot enough players.\n");
+    if (q->rear >= MAX_BALLS - 1)
         return;
-    }
 
-    for (over = 1; over <= totalOvers; over++)
+    q->rear++;
+
+    q->b[q->rear].no = no;
+    q->b[q->rear].runs = runs;
+    q->b[q->rear].wicket = wicket;
+
+    strcpy(q->b[q->rear].result,
+           result);
+}
+
+
+void scoreboard(Score *s)
+{
+    printf("\n-------------------------\n");
+
+    printf("SCORE: %d/%d\n",
+           s->runs,
+           s->wickets);
+
+    printf("OVERS: %d.%d\n",
+           s->balls / 6,
+           s->balls % 6);
+
+    printf("BATSMAN: %s  %d(%d)  SR: %.2f\n",
+           s->batsman,
+           s->bruns,
+           s->bballs,
+           s->bballs ?
+           (s->bruns * 100.0 / s->bballs) : 0);
+
+    printf("BOWLER: %s  %d/%d  Eco: %.2f\n",
+           s->bowler,
+           s->bwickets,
+           s->bruns_conceded,
+           s->bballs_bowled ?
+           s->bruns_conceded /
+           (s->bballs_bowled / 6.0) : 0);
+
+    if (s->target > 0)
     {
-        printf("\n================================\n");
-        printf("Over %d\n", over);
-        printf("Striker     : %s\n", striker->name);
-        printf("Non-Striker : %s\n", nonstriker->name);
-        printf("Bowler      : %s\n", bowler->name);
-        printf("================================\n");
+        int need = s->target - s->runs;
+        int left = 120 - s->balls;
 
-        for (ball = 1; ball <= 6; ball++)
-        {
-            printf("\nBall %d\n", ball);
-            printf("Striker: %s\n", striker->name);
+        if (need < 0)
+            need = 0;
 
-            printf("Enter number of runs (0,1,2,3,4,6): ");
-            scanf("%d", &runs);
+        printf("TARGET: %d  NEED: %d\n",
+               s->target,
+               need);
 
-            if (runs != 0 &&
-                runs != 1 &&
-                runs != 2 &&
-                runs != 3 &&
-                runs != 4 &&
-                runs != 6)
-            {
-                printf("Invalid runs!\n");
-                ball--;
-                continue;
-            }
-
-            printf("Wicket? (1 = Yes, 0 = No): ");
-            scanf("%d", &wicket);
-
-            if (wicket != 0 && wicket != 1)
-            {
-                printf("Invalid wicket choice!\n");
-                ball--;
-                continue;
-            }
-
-            batting(striker, runs, wicket);
-            bowling(bowler, runs, wicket);
-
-            if (wicket == 1)
-            {
-                /*
-                 * Find next available batsman.
-                 */
-                temp = head;
-
-                while (temp != NULL)
-                {
-                    if ((strcmp(temp->role, "BATSMAN") == 0 ||
-                         strcmp(temp->role, "ALLROUNDER") == 0) &&
-                        temp->isout == 0 &&
-                        temp != striker &&
-                        temp != nonstriker)
-                    {
-                        striker = temp;
-                        break;
-                    }
-
-                    temp = temp->next;
-                }
-
-                printf("New batsman: %s\n", striker->name);
-            }
-            else if (runs % 2 == 1)
-            {
-                temp = striker;
-                striker = nonstriker;
-                nonstriker = temp;
-
-                printf("Strike changed.\n");
-            }
-        }
-
-        /* Change strike at end of over */
-        temp = striker;
-        striker = nonstriker;
-        nonstriker = temp;
-
-        printf("\nEnd of over %d\n", over);
+        printf("REQUIRED RR: %.2f\n",
+               left > 0 ?
+               need * 6.0 / left : 0);
     }
+
+    printf("-------------------------\n");
+}
+
+
+void displayQueue(Queue *q)
+{
+    int i;
+
+    printf("\n========== BALL-BY-BALL ==========\n");
+
+    for (i = q->front; i <= q->rear; i++)
+    {
+        printf("Ball %d : %s\n",
+               q->b[i].no,
+               q->b[i].result);
+    }
+}
+
+
+void battingCard(Score *s)
+{
+    printf("\n========== BATTING CARD ==========\n");
+
+    printf("Player: %s\n",
+           s->batsman);
+
+    printf("Runs: %d  Balls: %d  4's: %d  6's: %d\n",
+           s->bruns,
+           s->bballs,
+           s->fours,
+           s->sixes);
+
+    printf("Strike Rate: %.2f\n",
+           s->bballs ?
+           s->bruns * 100.0 / s->bballs : 0);
+}
+
+
+void bowlingCard(Score *s)
+{
+    printf("\n========== BOWLING CARD ==========\n");
+
+    printf("Bowler: %s\n",
+           s->bowler);
+
+    printf("Overs: %d.%d  Runs: %d  Wickets: %d\n",
+           s->bballs_bowled / 6,
+           s->bballs_bowled % 6,
+           s->bruns_conceded,
+           s->bwickets);
+
+    printf("Economy: %.2f\n",
+           s->bballs_bowled ?
+           s->bruns_conceded /
+           (s->bballs_bowled / 6.0) : 0);
 }
