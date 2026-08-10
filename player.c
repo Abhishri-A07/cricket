@@ -1,16 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "player.h"
 
-struct Player *head = NULL;
-struct Player *tail = NULL;
+Player *head = NULL;
+Player *tail = NULL;
 
-void addPlayer()
+
+/* ================= ADD PLAYER ================= */
+
+void addPlayer(void)
 {
-    struct Player *newPlayer;
-    struct Player *temp;
+    Player *newPlayer;
+    Player *temp;
 
-    newPlayer = (struct Player *)malloc(sizeof(struct Player));
+    newPlayer = (Player *)malloc(sizeof(Player));
 
     if (newPlayer == NULL)
     {
@@ -59,8 +63,10 @@ void addPlayer()
     newPlayer->runs = 0;
     newPlayer->wickets = 0;
     newPlayer->performance = 0;
+
     newPlayer->ballsfaced = 0;
     newPlayer->isout = 0;
+
     newPlayer->ballsBowled = 0;
     newPlayer->runsgiven = 0;
 
@@ -82,9 +88,12 @@ void addPlayer()
     printf("\nPlayer added successfully!\n");
 }
 
-struct Player *searchPlayer(int id)
+
+/* ================= SEARCH ================= */
+
+Player *searchPlayer(int id)
 {
-    struct Player *temp = head;
+    Player *temp = head;
 
     while (temp != NULL)
     {
@@ -97,8 +106,14 @@ struct Player *searchPlayer(int id)
     return NULL;
 }
 
-void displayPlayer(struct Player *p)
+
+/* ================= DISPLAY PLAYER ================= */
+
+void displayPlayer(Player *p)
 {
+    if (p == NULL)
+        return;
+
     printf("\n----------------------------------------\n");
     printf("Player ID       : %d\n", p->id);
     printf("Name            : %s\n", p->name);
@@ -107,14 +122,17 @@ void displayPlayer(struct Player *p)
     printf("Previous Wickets: %d\n", p->pwickets);
     printf("Strike Rate     : %.2f\n", p->strikeRate);
     printf("Economy         : %.2f\n", p->economy);
-    printf("Base Price      : %.2f\n", p->basePrice);
+    printf("Base Price      : %.2f Cr\n", p->basePrice);
     printf("----------------------------------------\n");
 }
 
-void searchAndDisplay()
+
+/* ================= SEARCH AND DISPLAY ================= */
+
+void searchAndDisplay(void)
 {
     int id;
-    struct Player *p;
+    Player *p;
 
     printf("\nEnter Player ID to search: ");
     scanf("%d", &id);
@@ -132,10 +150,13 @@ void searchAndDisplay()
     }
 }
 
-void updatePlayer()
+
+/* ================= UPDATE ================= */
+
+void updatePlayer(void)
 {
     int id;
-    struct Player *p;
+    Player *p;
 
     printf("\nEnter Player ID to update: ");
     scanf("%d", &id);
@@ -169,13 +190,18 @@ void updatePlayer()
     printf("Enter New Base Price: ");
     scanf("%f", &p->basePrice);
 
+    p->performance = calculatePerformance(p);
+
     printf("\nPlayer details updated successfully!\n");
 }
 
-void deletePlayer()
+
+/* ================= DELETE ================= */
+
+void deletePlayer(void)
 {
     int id;
-    struct Player *p;
+    Player *p;
 
     printf("\nEnter Player ID to delete: ");
     scanf("%d", &id);
@@ -188,26 +214,27 @@ void deletePlayer()
         return;
     }
 
-    if (p == head)
-        head = p->next;
-
-    if (p == tail)
-        tail = p->prev;
-
     if (p->prev != NULL)
         p->prev->next = p->next;
+    else
+        head = p->next;
 
     if (p->next != NULL)
         p->next->prev = p->prev;
+    else
+        tail = p->prev;
 
     free(p);
 
     printf("\nPlayer deleted successfully!\n");
 }
 
-void displayAllPlayers()
+
+/* ================= DISPLAY ALL ================= */
+
+void displayAllPlayers(void)
 {
-    struct Player *temp = head;
+    Player *temp = head;
 
     if (head == NULL)
     {
@@ -226,23 +253,23 @@ void displayAllPlayers()
         printf("\nWickets     : %d", temp->pwickets);
         printf("\nStrike Rate : %.2f", temp->strikeRate);
         printf("\nEconomy     : %.2f", temp->economy);
-        printf("\nBase Price  : %.2f", temp->basePrice);
-        printf("\n-----------------------------------------------");
+        printf("\nBase Price  : %.2f Cr", temp->basePrice);
+        printf("\n-----------------------------------------------\n");
 
         temp = temp->next;
     }
-
-    printf("\n");
 }
 
-void freeDatabase()
+
+/* ================= FREE DATABASE ================= */
+
+void freeDatabase(void)
 {
-    struct Player *temp = head;
-    struct Player *next;
+    Player *temp = head;
 
     while (temp != NULL)
     {
-        next = temp->next;
+        Player *next = temp->next;
         free(temp);
         temp = next;
     }
