@@ -2,31 +2,9 @@
 #include <string.h>
 #include "player.h"
 
-#define INITIAL_BUDGET 100.0f
-#define MAX_TEAM_PLAYERS 11
-
-typedef struct
-{
-    char name[20];
-    float budget;
-    float spent;
-    int playerCount;
-
-} Team;
-
-typedef struct
-{
-    int playerID;
-    char playerName[30];
-    char teamName[20];
-    float soldPrice;
-
-} AuctionResult;
-
 void initializeTeam(Team *team, const char name[])
 {
     strcpy(team->name, name);
-
     team->budget = INITIAL_BUDGET;
     team->spent = 0.0f;
     team->playerCount = 0;
@@ -59,17 +37,8 @@ void auctionPlayer(struct Player *player,
 
     displayAuctionPlayer(player);
 
-    if (teamA->playerCount >= MAX_TEAM_PLAYERS &&
-        teamB->playerCount >= MAX_TEAM_PLAYERS)
-    {
-        printf("\nBoth teams already have 11 players.\n");
-        return;
-    }
-
     while (1)
     {
-        /* Team A */
-
         printf("\n%s\n", teamA->name);
         printf("Budget      : %.2f Cr\n", teamA->budget);
         printf("Current Bid : %.2f Cr\n", currentBid);
@@ -81,33 +50,26 @@ void auctionPlayer(struct Player *player,
 
         if (choice == 1)
         {
-            if (teamA->playerCount >= MAX_TEAM_PLAYERS)
+            printf("Enter Team A bid: ");
+            scanf("%f", &bid);
+
+            if (bid <= currentBid)
             {
-                printf("Team A already has 11 players.\n");
+                printf("Bid must be greater than %.2f Cr\n",
+                       currentBid);
+                continue;
             }
-            else
+
+            if (bid > teamA->budget)
             {
-                printf("Enter Team A bid: ");
-                scanf("%f", &bid);
-
-                if (bid <= currentBid)
-                {
-                    printf("Bid must be greater than %.2f Cr\n",
-                           currentBid);
-                    continue;
-                }
-
-                if (bid > teamA->budget)
-                {
-                    printf("Insufficient budget!\n");
-                    continue;
-                }
-
-                currentBid = bid;
-                highestBidder = 1;
-
-                printf("Team A bid %.2f Cr\n", currentBid);
+                printf("Insufficient budget!\n");
+                continue;
             }
+
+            currentBid = bid;
+            highestBidder = 1;
+
+            printf("Team A bid %.2f Cr\n", currentBid);
         }
         else if (choice == 2)
         {
@@ -122,8 +84,6 @@ void auctionPlayer(struct Player *player,
             continue;
         }
 
-        /* Team B */
-
         printf("\n%s\n", teamB->name);
         printf("Budget      : %.2f Cr\n", teamB->budget);
         printf("Current Bid : %.2f Cr\n", currentBid);
@@ -135,33 +95,26 @@ void auctionPlayer(struct Player *player,
 
         if (choice == 1)
         {
-            if (teamB->playerCount >= MAX_TEAM_PLAYERS)
+            printf("Enter Team B bid: ");
+            scanf("%f", &bid);
+
+            if (bid <= currentBid)
             {
-                printf("Team B already has 11 players.\n");
+                printf("Bid must be greater than %.2f Cr\n",
+                       currentBid);
+                continue;
             }
-            else
+
+            if (bid > teamB->budget)
             {
-                printf("Enter Team B bid: ");
-                scanf("%f", &bid);
-
-                if (bid <= currentBid)
-                {
-                    printf("Bid must be greater than %.2f Cr\n",
-                           currentBid);
-                    continue;
-                }
-
-                if (bid > teamB->budget)
-                {
-                    printf("Insufficient budget!\n");
-                    continue;
-                }
-
-                currentBid = bid;
-                highestBidder = 2;
-
-                printf("Team B bid %.2f Cr\n", currentBid);
+                printf("Insufficient budget!\n");
+                continue;
             }
+
+            currentBid = bid;
+            highestBidder = 2;
+
+            printf("Team B bid %.2f Cr\n", currentBid);
         }
         else if (choice == 2)
         {
