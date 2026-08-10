@@ -153,7 +153,7 @@ void addWicket(MatchController *m)
 }
 
 
-int checkInningsEnd(MatchController *m)
+int checkInningsEnd(struct MatchController *m)
 {
     if (m->wickets >= MAX_WICKETS)
         return 1;
@@ -161,8 +161,7 @@ int checkInningsEnd(MatchController *m)
     if (m->totalBalls >= m->maxBalls)
         return 1;
 
-    if (m->currentInnings == 2 &&
-        m->runs >= m->target)
+    if (m->currentInnings == 2 && m->runs >= m->target)
         return 1;
 
     return 0;
@@ -252,19 +251,22 @@ void endInnings(MatchController *m)
 }
 
 
-void startSecondInnings(MatchController *m)
+void startSecondInnings(struct MatchController *m)
 {
     int firstInningsScore;
     int temp;
 
+    /* Store first innings score */
     firstInningsScore = m->runs;
 
+    /* Swap batting and bowling teams */
     temp = m->battingTeam;
-
     m->battingTeam = m->bowlingTeam;
     m->bowlingTeam = temp;
 
+    /* Set target for second innings */
     m->target = firstInningsScore + 1;
 
+    /* Start second innings */
     startInnings(m, 2);
 }
