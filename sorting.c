@@ -9,10 +9,10 @@ void performance(struct Player *head)
 
     while (temp != NULL)
     {
-        total = (temp->runs * 0.4)
-              + (temp->wickets * 10 * 0.3)
-              + (temp->strikeRate * 0.2)
-              + ((10 - temp->economy) * 0.1);
+        total = (temp->runs * 0.4f)
+              + (temp->wickets * 10 * 0.3f)
+              + (temp->strikeRate * 0.2f)
+              + ((10 - temp->economy) * 0.1f);
 
         temp->performance = total;
 
@@ -24,20 +24,19 @@ void ranking(struct Player *head)
 {
     struct Player *temp = head;
 
-    printf("\n:::::::::::::: PLAYER RANK DETAILS ::::::::::::::\n");
-    printf("PLAYER NAME\tSCORE\n");
-    printf("-----------------------------------------------\n");
+    printf("\n:::::::::::::: PLAYERS RANK DETAILS ::::::::::::::\n");
+    printf("PLAYER NAME \tSCORE\n");
 
     while (temp != NULL)
     {
-        printf("%s\t\t%.2f\n",
+        printf("%s\t %.2f\n",
                temp->name,
                temp->performance);
 
         temp = temp->next;
     }
 
-    printf(":::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+    printf("\n:::::::::::::::::::::::::::::::::::::::::::::::::::\n");
 }
 
 void bestplayer(struct Player *head)
@@ -50,7 +49,8 @@ void bestplayer(struct Player *head)
 
     while (temp != NULL)
     {
-        if (strcmp(temp->role, "BATSMAN") == 0)
+        if (strcmp(temp->role, "BATSMAN") == 0 ||
+            strcmp(temp->role, "batsman") == 0)
         {
             if (batsman == NULL ||
                 temp->runs > batsman->runs)
@@ -59,7 +59,8 @@ void bestplayer(struct Player *head)
             }
         }
 
-        if (strcmp(temp->role, "BOWLER") == 0)
+        if (strcmp(temp->role, "BOWLER") == 0 ||
+            strcmp(temp->role, "bowler") == 0)
         {
             if (bowler == NULL ||
                 temp->wickets > bowler->wickets)
@@ -68,7 +69,8 @@ void bestplayer(struct Player *head)
             }
         }
 
-        if (strcmp(temp->role, "ALLROUNDER") == 0)
+        if (strcmp(temp->role, "ALLROUNDER") == 0 ||
+            strcmp(temp->role, "allrounder") == 0)
         {
             if (allrounder == NULL ||
                 temp->performance > allrounder->performance)
@@ -83,23 +85,19 @@ void bestplayer(struct Player *head)
     printf("\n================ BEST PLAYERS ================\n");
 
     if (batsman != NULL)
-        printf("Best Batsman    : %s (%d runs)\n",
-               batsman->name, batsman->runs);
+        printf("Best Batsman    : %s\n", batsman->name);
     else
         printf("Best Batsman    : Not available\n");
 
     if (bowler != NULL)
-        printf("Best Bowler     : %s (%d wickets)\n",
-               bowler->name, bowler->wickets);
+        printf("Best Bowler     : %s\n", bowler->name);
     else
         printf("Best Bowler     : Not available\n");
 
     if (allrounder != NULL)
-        printf("Best All-Rounder : %s (%.2f performance)\n",
-               allrounder->name,
-               allrounder->performance);
+        printf("Best All-Rounder: %s\n", allrounder->name);
     else
-        printf("Best All-Rounder : Not available\n");
+        printf("Best All-Rounder: Not available\n");
 
     printf("==============================================\n");
 }
@@ -115,69 +113,41 @@ void sortplayer(struct Player *head)
         {
             if (j->performance > i->performance)
             {
-                struct Player temp;
+                float tempPerf;
+                int tempRuns;
+                int tempWickets;
+                float tempSR;
+                float tempEco;
+                char tempName[30];
+                char tempRole[20];
 
-                /*
-                 * Swap player data only.
-                 * Do not swap prev/next pointers.
-                 */
-
-                temp.id = i->id;
-                strcpy(temp.name, i->name);
-                strcpy(temp.role, i->role);
-
-                temp.pruns = i->pruns;
-                temp.runs = i->runs;
-                temp.pwickets = i->pwickets;
-                temp.wickets = i->wickets;
-
-                temp.strikeRate = i->strikeRate;
-                temp.economy = i->economy;
-                temp.performance = i->performance;
-                temp.basePrice = i->basePrice;
-
-                temp.ballsfaced = i->ballsfaced;
-                temp.isout = i->isout;
-                temp.ballsBowled = i->ballsBowled;
-                temp.runsgiven = i->runsgiven;
-
-                i->id = j->id;
-                strcpy(i->name, j->name);
-                strcpy(i->role, j->role);
-
-                i->pruns = j->pruns;
-                i->runs = j->runs;
-                i->pwickets = j->pwickets;
-                i->wickets = j->wickets;
-
-                i->strikeRate = j->strikeRate;
-                i->economy = j->economy;
+                tempPerf = i->performance;
                 i->performance = j->performance;
-                i->basePrice = j->basePrice;
+                j->performance = tempPerf;
 
-                i->ballsfaced = j->ballsfaced;
-                i->isout = j->isout;
-                i->ballsBowled = j->ballsBowled;
-                i->runsgiven = j->runsgiven;
+                tempRuns = i->runs;
+                i->runs = j->runs;
+                j->runs = tempRuns;
 
-                j->id = temp.id;
-                strcpy(j->name, temp.name);
-                strcpy(j->role, temp.role);
+                tempWickets = i->wickets;
+                i->wickets = j->wickets;
+                j->wickets = tempWickets;
 
-                j->pruns = temp.pruns;
-                j->runs = temp.runs;
-                j->pwickets = temp.pwickets;
-                j->wickets = temp.wickets;
+                tempSR = i->strikeRate;
+                i->strikeRate = j->strikeRate;
+                j->strikeRate = tempSR;
 
-                j->strikeRate = temp.strikeRate;
-                j->economy = temp.economy;
-                j->performance = temp.performance;
-                j->basePrice = temp.basePrice;
+                tempEco = i->economy;
+                i->economy = j->economy;
+                j->economy = tempEco;
 
-                j->ballsfaced = temp.ballsfaced;
-                j->isout = temp.isout;
-                j->ballsBowled = temp.ballsBowled;
-                j->runsgiven = temp.runsgiven;
+                strcpy(tempName, i->name);
+                strcpy(i->name, j->name);
+                strcpy(j->name, tempName);
+
+                strcpy(tempRole, i->role);
+                strcpy(i->role, j->role);
+                strcpy(j->role, tempRole);
             }
         }
     }
