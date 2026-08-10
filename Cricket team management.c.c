@@ -1,34 +1,25 @@
 #include <stdio.h>
-#include <string.h>
 #include "player.h"
 
-#define MAX 22
 
-struct Team
+void addTeamPlayer(TeamManagement *team, Player p)
 {
-    char name[20];
-    struct Player players[MAX];
-    int count;
-};
-
-void addTeamPlayer(struct Team *team, struct Player p)
-{
-    if (team->count < MAX)
-    {
-        team->players[team->count] = p;
-        team->count++;
-
-        printf("%s added to %s\n",
-               p.name,
-               team->name);
-    }
-    else
+    if (team->count >= MAX_TEAM_PLAYERS)
     {
         printf("Team is full!\n");
+        return;
     }
+
+    team->players[team->count] = p;
+    team->count++;
+
+    printf("%s added to %s\n",
+           p.name,
+           team->name);
 }
 
-void removeTeamPlayer(struct Team *team, int id)
+
+void removeTeamPlayer(TeamManagement *team, int id)
 {
     int i;
     int j;
@@ -54,9 +45,10 @@ void removeTeamPlayer(struct Team *team, int id)
     printf("Player not found!\n");
 }
 
-void replaceTeamPlayer(struct Team *team,
-                        int oldId,
-                        struct Player newPlayer)
+
+void replaceTeamPlayer(TeamManagement *team,
+                       int oldId,
+                       Player newPlayer)
 {
     int i;
 
@@ -76,7 +68,8 @@ void replaceTeamPlayer(struct Team *team,
     printf("Player not found!\n");
 }
 
-void displayTeam(struct Team *team)
+
+void displayTeam(TeamManagement *team)
 {
     int i;
 
@@ -95,7 +88,8 @@ void displayTeam(struct Team *team)
            team->count);
 }
 
-void checkSquad(struct Team *team)
+
+void checkSquad(TeamManagement *team)
 {
     if (team->count >= 11)
     {
