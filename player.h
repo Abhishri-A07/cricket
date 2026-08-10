@@ -7,8 +7,12 @@ struct Player
     char name[30];
     char role[20];
 
-    int pruns,runs;
-    int pwickets,wickets;
+    int pruns;
+    int runs;
+
+    int pwickets;
+    int wickets;
+
     float strikeRate;
     float economy;
     float performance;
@@ -27,7 +31,6 @@ struct Player
 extern struct Player *head;
 extern struct Player *tail;
 
-float calculatePerformance(struct Player *p);
 
 void addPlayer();
 struct Player *searchPlayer(int id);
@@ -37,6 +40,14 @@ void updatePlayer();
 void deletePlayer();
 void displayAllPlayers();
 void freeDatabase();
-void play(struct Player *head,int totalOvers);
+
+/* Performance and sorting functions */
+void performance(struct Player *head);
+void ranking(struct Player *head);
+void bestplayer(struct Player *head);
+void sortplayer(struct Player *head);
+
+/* Match playing function */
+void play(struct Player *head, int totalOvers);
 
 #endif
