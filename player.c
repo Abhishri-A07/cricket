@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "player.h"
 
 struct Player *head = NULL;
@@ -9,6 +8,7 @@ struct Player *tail = NULL;
 void addPlayer()
 {
     struct Player *newPlayer;
+    struct Player *temp;
 
     newPlayer = (struct Player *)malloc(sizeof(struct Player));
 
@@ -21,7 +21,7 @@ void addPlayer()
     printf("\nEnter Player ID: ");
     scanf("%d", &newPlayer->id);
 
-    struct Player *temp = head;
+    temp = head;
 
     while (temp != NULL)
     {
@@ -56,7 +56,6 @@ void addPlayer()
     printf("Enter Base Price: ");
     scanf("%f", &newPlayer->basePrice);
 
-    /* Initialize match statistics */
     newPlayer->runs = 0;
     newPlayer->wickets = 0;
     newPlayer->performance = 0;
@@ -115,11 +114,12 @@ void displayPlayer(struct Player *p)
 void searchAndDisplay()
 {
     int id;
+    struct Player *p;
 
     printf("\nEnter Player ID to search: ");
     scanf("%d", &id);
 
-    struct Player *p = searchPlayer(id);
+    p = searchPlayer(id);
 
     if (p == NULL)
     {
@@ -135,11 +135,12 @@ void searchAndDisplay()
 void updatePlayer()
 {
     int id;
+    struct Player *p;
 
     printf("\nEnter Player ID to update: ");
     scanf("%d", &id);
 
-    struct Player *p = searchPlayer(id);
+    p = searchPlayer(id);
 
     if (p == NULL)
     {
@@ -156,7 +157,7 @@ void updatePlayer()
     printf("Enter New Previous Runs: ");
     scanf("%d", &p->pruns);
 
-    printf("Enter New Wickets: ");
+    printf("Enter New Previous Wickets: ");
     scanf("%d", &p->pwickets);
 
     printf("Enter New Strike Rate: ");
@@ -174,11 +175,12 @@ void updatePlayer()
 void deletePlayer()
 {
     int id;
+    struct Player *p;
 
     printf("\nEnter Player ID to delete: ");
     scanf("%d", &id);
 
-    struct Player *p = searchPlayer(id);
+    p = searchPlayer(id);
 
     if (p == NULL)
     {
@@ -224,20 +226,23 @@ void displayAllPlayers()
         printf("\nWickets     : %d", temp->pwickets);
         printf("\nStrike Rate : %.2f", temp->strikeRate);
         printf("\nEconomy     : %.2f", temp->economy);
-        printf("\nBase Price  : %.2f\n", temp->basePrice);
-        printf("-----------------------------------------------\n");
+        printf("\nBase Price  : %.2f", temp->basePrice);
+        printf("\n-----------------------------------------------");
 
         temp = temp->next;
     }
+
+    printf("\n");
 }
 
 void freeDatabase()
 {
     struct Player *temp = head;
+    struct Player *next;
 
     while (temp != NULL)
     {
-        struct Player *next = temp->next;
+        next = temp->next;
         free(temp);
         temp = next;
     }
