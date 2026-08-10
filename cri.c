@@ -2,10 +2,8 @@
 #include <string.h>
 #include "player.h"
 
-#define MAX_SQUAD 15
-#define PLAYING_XI 11
 
-void getSquad(struct Player squad[], int *n)
+void getSquad(Player squad[], int *n)
 {
     int i;
 
@@ -15,151 +13,155 @@ void getSquad(struct Player squad[], int *n)
         scanf("%d", n);
 
         if (*n < 11 || *n > 15)
-        {
             printf("Squad size must be between 11 and 15.\n");
-        }
 
     } while (*n < 11 || *n > 15);
+
 
     printf("\nEnter player details\n");
 
     for (i = 0; i < *n; i++)
     {
-        printf("\nPlayer %d name: ", i + 1);
+        printf("\nPlayer %d name: ",
+               i + 1);
+
         scanf(" %[^\n]", squad[i].name);
 
-        printf("Role (BATSMAN/BOWLER/ALLROUNDER): ");
+        printf("Role: ");
         scanf("%s", squad[i].role);
     }
 }
 
-void getLineup(struct Player squad[],
+
+void getLineup(Player squad[],
                int n,
-               struct Player xi[])
+               Player xi[])
 {
     int i;
     int x;
-    int j;
-    int selected[MAX_SQUAD] = {0};
 
     printf("\nSELECT PLAYING XI\n");
 
-    for (i = 0; i < PLAYING_XI; i++)
+    for (i = 0; i < 11; i++)
     {
         printf("\nAvailable players:\n");
 
+        int j;
+
         for (j = 0; j < n; j++)
         {
-            if (selected[j] == 0)
-                printf("%d. %s\n", j + 1, squad[j].name);
+            printf("%d. %s (%s)\n",
+                   j + 1,
+                   squad[j].name,
+                   squad[j].role);
         }
 
-        printf("Select player %d: ", i + 1);
-        scanf("%d", &x);
-
-        if (x < 1 || x > n || selected[x - 1] == 1)
+        do
         {
-            printf("Invalid or already selected player!\n");
-            i--;
-            continue;
-        }
+            printf("Select player %d: ",
+                   i + 1);
+
+            scanf("%d", &x);
+
+        } while (x < 1 || x > n);
 
         xi[i] = squad[x - 1];
-        selected[x - 1] = 1;
     }
 }
 
-void battingOrder(struct Player xi[])
+
+void battingOrder(Player xi[])
 {
     int i;
     int x;
-    int selected[PLAYING_XI] = {0};
-    struct Player temp[PLAYING_XI];
+    Player temp[11];
 
     printf("\nSET BATTING ORDER\n");
 
-    for (i = 0; i < PLAYING_XI; i++)
+    for (i = 0; i < 11; i++)
     {
-        printf("%d. %s\n", i + 1, xi[i].name);
+        printf("%d. %s\n",
+               i + 1,
+               xi[i].name);
     }
 
-    for (i = 0; i < PLAYING_XI; i++)
+    for (i = 0; i < 11; i++)
     {
-        printf("Position %d: ", i + 1);
-        scanf("%d", &x);
-
-        if (x < 1 || x > PLAYING_XI || selected[x - 1] == 1)
+        do
         {
-            printf("Invalid or already selected player!\n");
-            i--;
-            continue;
-        }
+            printf("Position %d: ",
+                   i + 1);
+
+            scanf("%d", &x);
+
+        } while (x < 1 || x > 11);
 
         temp[i] = xi[x - 1];
-        selected[x - 1] = 1;
     }
 
-    for (i = 0; i < PLAYING_XI; i++)
-    {
+    for (i = 0; i < 11; i++)
         xi[i] = temp[i];
-    }
 }
 
-void selectCaptain(struct Player xi[])
+
+void selectCaptain(Player xi[])
 {
     int x;
     int i;
 
     printf("\nSELECT CAPTAIN\n");
 
-    for (i = 0; i < PLAYING_XI; i++)
+    for (i = 0; i < 11; i++)
     {
-        printf("%d. %s\n", i + 1, xi[i].name);
+        printf("%d. %s\n",
+               i + 1,
+               xi[i].name);
     }
 
-    printf("Enter number: ");
-    scanf("%d", &x);
-
-    if (x < 1 || x > PLAYING_XI)
+    do
     {
-        printf("Invalid player number!\n");
-        return;
-    }
+        printf("Enter number: ");
+        scanf("%d", &x);
 
-    printf("Captain: %s\n", xi[x - 1].name);
+    } while (x < 1 || x > 11);
+
+    printf("Captain: %s\n",
+           xi[x - 1].name);
 }
 
-void selectKeeper(struct Player xi[])
+
+void selectKeeper(Player xi[])
 {
     int x;
     int i;
 
     printf("\nSELECT WICKETKEEPER\n");
 
-    for (i = 0; i < PLAYING_XI; i++)
+    for (i = 0; i < 11; i++)
     {
-        printf("%d. %s\n", i + 1, xi[i].name);
+        printf("%d. %s\n",
+               i + 1,
+               xi[i].name);
     }
 
-    printf("Enter number: ");
-    scanf("%d", &x);
-
-    if (x < 1 || x > PLAYING_XI)
+    do
     {
-        printf("Invalid player number!\n");
-        return;
-    }
+        printf("Enter number: ");
+        scanf("%d", &x);
 
-    printf("Wicketkeeper: %s\n", xi[x - 1].name);
+    } while (x < 1 || x > 11);
+
+    printf("Wicketkeeper: %s\n",
+           xi[x - 1].name);
 }
 
-void bowlingPlan(struct Player xi[])
+
+void bowlingPlan(Player xi[])
 {
     int n;
     int x;
     int i;
     int j;
-    int selected[PLAYING_XI] = {0};
 
     printf("\nNUMBER OF BOWLERS (4 or 5): ");
     scanf("%d", &n);
@@ -174,31 +176,30 @@ void bowlingPlan(struct Player xi[])
 
     for (i = 0; i < n; i++)
     {
-        printf("\nAvailable players:\n");
-
-        for (j = 0; j < PLAYING_XI; j++)
+        for (j = 0; j < 11; j++)
         {
-            if (selected[j] == 0)
-                printf("%d. %s\n", j + 1, xi[j].name);
+            printf("%d. %s (%s)\n",
+                   j + 1,
+                   xi[j].name,
+                   xi[j].role);
         }
 
-        printf("Bowler %d: ", i + 1);
-        scanf("%d", &x);
-
-        if (x < 1 || x > PLAYING_XI || selected[x - 1] == 1)
+        do
         {
-            printf("Invalid or already selected player!\n");
-            i--;
-            continue;
-        }
+            printf("Bowler %d: ",
+                   i + 1);
 
-        selected[x - 1] = 1;
+            scanf("%d", &x);
 
-        printf("Selected: %s\n", xi[x - 1].name);
+        } while (x < 1 || x > 11);
+
+        printf("Selected: %s\n",
+               xi[x - 1].name);
     }
 }
 
-void displayLineup(struct Player xi[])
+
+void displayLineup(Player xi[])
 {
     int i;
 
@@ -206,7 +207,7 @@ void displayLineup(struct Player xi[])
     printf("       FINAL LINE-UP\n");
     printf("============================\n");
 
-    for (i = 0; i < PLAYING_XI; i++)
+    for (i = 0; i < 11; i++)
     {
         printf("%d. %s (%s)\n",
                i + 1,
