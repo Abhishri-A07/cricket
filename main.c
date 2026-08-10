@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "player.h"
+MatchController match;
 
 
 void playerDatabaseMenu(void)
@@ -151,7 +152,7 @@ void runSquadSelection(void)
 
 void runMatch(void)
 {
-    MatchController match;
+    
 
     int innings;
 
@@ -332,7 +333,7 @@ int main(void)
         }
 
 
-    } while (choice != 9);
+    } while (choice != 10);
 
 
     return 0;

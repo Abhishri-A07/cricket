@@ -153,7 +153,7 @@ void addWicket(MatchController *m)
 }
 
 
-int checkInningsEnd(struct MatchController *m)
+int checkInningsEnd(MatchController *m)
 {
     if (m->wickets >= MAX_WICKETS)
         return 1;
@@ -251,7 +251,7 @@ void endInnings(MatchController *m)
 }
 
 
-void startSecondInnings(struct MatchController *m)
+void startSecondInnings(MatchController *m)
 {
     int firstInningsScore;
     int temp;

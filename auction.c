@@ -127,7 +127,7 @@ void auctionPlayer(Player *player,
         {
             printf("Team B passed.\n");
 
-            if (highestBidder == 1)
+            if (highestBidder == 1 || highestBidder==0)
                 break;
         }
         else
