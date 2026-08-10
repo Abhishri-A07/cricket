@@ -2,55 +2,62 @@
 #include <string.h>
 #include "player.h"
 
-void performance(struct Player *head)
+
+float calculatePerformance(Player *p)
 {
-    float total;
-    struct Player *temp = head;
+    if (p == NULL)
+        return 0;
+
+    return (p->runs * 0.4f)
+         + (p->wickets * 10.0f * 0.3f)
+         + (p->strikeRate * 0.2f)
+         + ((10.0f - p->economy) * 0.1f);
+}
+
+
+void performance(Player *head)
+{
+    Player *temp = head;
 
     while (temp != NULL)
     {
-        total = (temp->runs * 0.4f)
-              + (temp->wickets * 10 * 0.3f)
-              + (temp->strikeRate * 0.2f)
-              + ((10 - temp->economy) * 0.1f);
-
-        temp->performance = total;
-
+        temp->performance = calculatePerformance(temp);
         temp = temp->next;
     }
 }
 
-void ranking(struct Player *head)
+
+void ranking(Player *head)
 {
-    struct Player *temp = head;
+    Player *temp = head;
 
     printf("\n:::::::::::::: PLAYERS RANK DETAILS ::::::::::::::\n");
-    printf("PLAYER NAME \tSCORE\n");
+    printf("PLAYER NAME\tSCORE\n");
 
     while (temp != NULL)
     {
-        printf("%s\t %.2f\n",
+        printf("%s\t\t%.2f\n",
                temp->name,
                temp->performance);
 
         temp = temp->next;
     }
 
-    printf("\n:::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+    printf(":::::::::::::::::::::::::::::::::::::::::::::::::::\n");
 }
 
-void bestplayer(struct Player *head)
-{
-    struct Player *temp = head;
 
-    struct Player *batsman = NULL;
-    struct Player *bowler = NULL;
-    struct Player *allrounder = NULL;
+void bestplayer(Player *head)
+{
+    Player *temp = head;
+
+    Player *batsman = NULL;
+    Player *bowler = NULL;
+    Player *allrounder = NULL;
 
     while (temp != NULL)
     {
-        if (strcmp(temp->role, "BATSMAN") == 0 ||
-            strcmp(temp->role, "batsman") == 0)
+        if (strcasecmp(temp->role, "BATSMAN") == 0)
         {
             if (batsman == NULL ||
                 temp->runs > batsman->runs)
@@ -59,8 +66,7 @@ void bestplayer(struct Player *head)
             }
         }
 
-        if (strcmp(temp->role, "BOWLER") == 0 ||
-            strcmp(temp->role, "bowler") == 0)
+        if (strcasecmp(temp->role, "BOWLER") == 0)
         {
             if (bowler == NULL ||
                 temp->wickets > bowler->wickets)
@@ -69,8 +75,8 @@ void bestplayer(struct Player *head)
             }
         }
 
-        if (strcmp(temp->role, "ALLROUNDER") == 0 ||
-            strcmp(temp->role, "allrounder") == 0)
+        if (strcasecmp(temp->role, "ALLROUNDER") == 0 ||
+            strcasecmp(temp->role, "ALL-ROUNDER") == 0)
         {
             if (allrounder == NULL ||
                 temp->performance > allrounder->performance)
@@ -82,30 +88,38 @@ void bestplayer(struct Player *head)
         temp = temp->next;
     }
 
-    printf("\n================ BEST PLAYERS ================\n");
+    printf("\n========== BEST PLAYERS ==========\n");
 
     if (batsman != NULL)
-        printf("Best Batsman    : %s\n", batsman->name);
+        printf("Best Batsman    : %s (%d runs)\n",
+               batsman->name, batsman->runs);
     else
         printf("Best Batsman    : Not available\n");
 
     if (bowler != NULL)
-        printf("Best Bowler     : %s\n", bowler->name);
+        printf("Best Bowler     : %s (%d wickets)\n",
+               bowler->name, bowler->wickets);
     else
         printf("Best Bowler     : Not available\n");
 
     if (allrounder != NULL)
-        printf("Best All-Rounder: %s\n", allrounder->name);
+        printf("Best All-rounder : %s (%.2f)\n",
+               allrounder->name,
+               allrounder->performance);
     else
-        printf("Best All-Rounder: Not available\n");
-
-    printf("==============================================\n");
+        printf("Best All-rounder : Not available\n");
 }
 
-void sortplayer(struct Player *head)
+
+/*
+ * Sort players according to performance.
+ * The complete player information is exchanged so that
+ * records remain together.
+ */
+void sortplayer(Player *head)
 {
-    struct Player *i;
-    struct Player *j;
+    Player *i;
+    Player *j;
 
     for (i = head; i != NULL; i = i->next)
     {
@@ -113,41 +127,22 @@ void sortplayer(struct Player *head)
         {
             if (j->performance > i->performance)
             {
-                float tempPerf;
-                int tempRuns;
-                int tempWickets;
-                float tempSR;
-                float tempEco;
-                char tempName[30];
-                char tempRole[20];
+                Player temp = *i;
 
-                tempPerf = i->performance;
-                i->performance = j->performance;
-                j->performance = tempPerf;
+                /*
+                 * Preserve linked-list pointers.
+                 */
+                Player *prevI = i->prev;
+                Player *nextI = i->next;
 
-                tempRuns = i->runs;
-                i->runs = j->runs;
-                j->runs = tempRuns;
+                *i = *j;
+                *j = temp;
 
-                tempWickets = i->wickets;
-                i->wickets = j->wickets;
-                j->wickets = tempWickets;
+                i->prev = prevI;
+                i->next = nextI;
 
-                tempSR = i->strikeRate;
-                i->strikeRate = j->strikeRate;
-                j->strikeRate = tempSR;
-
-                tempEco = i->economy;
-                i->economy = j->economy;
-                j->economy = tempEco;
-
-                strcpy(tempName, i->name);
-                strcpy(i->name, j->name);
-                strcpy(j->name, tempName);
-
-                strcpy(tempRole, i->role);
-                strcpy(i->role, j->role);
-                strcpy(j->role, tempRole);
+                j->prev = temp.prev;
+                j->next = temp.next;
             }
         }
     }
