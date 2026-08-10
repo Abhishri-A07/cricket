@@ -243,7 +243,9 @@ int main(void)
         printf("6. Best Players\n");
         printf("7. Sort Players\n");
         printf("8. Display All Players\n");
-        printf("9. Exit\n");
+        printf("9. Start second innings\n");
+        printf("10. Exit\n");
+
 
         printf("============================================\n");
 
@@ -308,6 +310,17 @@ int main(void)
 
 
             case 9:
+            if (match.state == INNINGS_COMPLETED &&
+            match.currentInnings == 1)
+            {
+            startSecondInnings(&match);
+            }
+            else
+            {
+            printf("\nFirst innings must be completed first.\n");
+            }
+            break;
+            case 10:
                 freeDatabase();
 
                 printf("\nExiting Cricket Management System...\n");
