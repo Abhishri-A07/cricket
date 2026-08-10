@@ -2,7 +2,9 @@
 #include <string.h>
 #include "player.h"
 
-void initializeTeam(Team *team, const char name[])
+
+void initializeTeam(AuctionTeam *team,
+                    const char name[])
 {
     strcpy(team->name, name);
     team->budget = INITIAL_BUDGET;
@@ -10,7 +12,8 @@ void initializeTeam(Team *team, const char name[])
     team->playerCount = 0;
 }
 
-void displayAuctionPlayer(struct Player *player)
+
+void displayAuctionPlayer(Player *player)
 {
     printf("\n========================================\n");
     printf("              PLAYER AUCTION\n");
@@ -24,9 +27,10 @@ void displayAuctionPlayer(struct Player *player)
     printf("========================================\n");
 }
 
-void auctionPlayer(struct Player *player,
-                   Team *teamA,
-                   Team *teamB,
+
+void auctionPlayer(Player *player,
+                   AuctionTeam *teamA,
+                   AuctionTeam *teamB,
                    AuctionResult *result)
 {
     float currentBid = player->basePrice;
@@ -69,7 +73,8 @@ void auctionPlayer(struct Player *player,
             currentBid = bid;
             highestBidder = 1;
 
-            printf("Team A bid %.2f Cr\n", currentBid);
+            printf("Team A bid %.2f Cr\n",
+                   currentBid);
         }
         else if (choice == 2)
         {
@@ -83,6 +88,7 @@ void auctionPlayer(struct Player *player,
             printf("Invalid choice!\n");
             continue;
         }
+
 
         printf("\n%s\n", teamB->name);
         printf("Budget      : %.2f Cr\n", teamB->budget);
@@ -114,7 +120,8 @@ void auctionPlayer(struct Player *player,
             currentBid = bid;
             highestBidder = 2;
 
-            printf("Team B bid %.2f Cr\n", currentBid);
+            printf("Team B bid %.2f Cr\n",
+                   currentBid);
         }
         else if (choice == 2)
         {
@@ -130,20 +137,26 @@ void auctionPlayer(struct Player *player,
         }
     }
 
+
     result->playerID = player->id;
     strcpy(result->playerName, player->name);
 
+
     if (highestBidder == 0)
     {
-        printf("\n%s is UNSOLD!\n", player->name);
+        printf("\n%s is UNSOLD!\n",
+               player->name);
 
         strcpy(result->teamName, "UNSOLD");
         result->soldPrice = 0.0f;
     }
     else if (highestBidder == 1)
     {
-        printf("\n%s SOLD TO TEAM A\n", player->name);
-        printf("Final Price: %.2f Cr\n", currentBid);
+        printf("\n%s SOLD TO TEAM A\n",
+               player->name);
+
+        printf("Final Price: %.2f Cr\n",
+               currentBid);
 
         teamA->budget -= currentBid;
         teamA->spent += currentBid;
@@ -154,8 +167,11 @@ void auctionPlayer(struct Player *player,
     }
     else
     {
-        printf("\n%s SOLD TO TEAM B\n", player->name);
-        printf("Final Price: %.2f Cr\n", currentBid);
+        printf("\n%s SOLD TO TEAM B\n",
+               player->name);
+
+        printf("Final Price: %.2f Cr\n",
+               currentBid);
 
         teamB->budget -= currentBid;
         teamB->spent += currentBid;
@@ -166,10 +182,11 @@ void auctionPlayer(struct Player *player,
     }
 }
 
+
 void displayFinalReport(AuctionResult results[],
                         int count,
-                        Team *teamA,
-                        Team *teamB)
+                        AuctionTeam *teamA,
+                        AuctionTeam *teamB)
 {
     int i;
 
@@ -178,7 +195,10 @@ void displayFinalReport(AuctionResult results[],
     printf("============================================\n");
 
     printf("%-5s %-20s %-15s %-10s\n",
-           "ID", "PLAYER", "TEAM", "PRICE");
+           "ID",
+           "PLAYER",
+           "TEAM",
+           "PRICE");
 
     printf("--------------------------------------------\n");
 
@@ -192,12 +212,23 @@ void displayFinalReport(AuctionResult results[],
     }
 
     printf("\nTEAM A\n");
-    printf("Amount Spent   : %.2f Cr\n", teamA->spent);
-    printf("Remaining      : %.2f Cr\n", teamA->budget);
-    printf("Players Bought : %d\n", teamA->playerCount);
+    printf("Amount Spent   : %.2f Cr\n",
+           teamA->spent);
+
+    printf("Remaining      : %.2f Cr\n",
+           teamA->budget);
+
+    printf("Players Bought : %d\n",
+           teamA->playerCount);
+
 
     printf("\nTEAM B\n");
-    printf("Amount Spent   : %.2f Cr\n", teamB->spent);
-    printf("Remaining      : %.2f Cr\n", teamB->budget);
-    printf("Players Bought : %d\n", teamB->playerCount);
+    printf("Amount Spent   : %.2f Cr\n",
+           teamB->spent);
+
+    printf("Remaining      : %.2f Cr\n",
+           teamB->budget);
+
+    printf("Players Bought : %d\n",
+           teamB->playerCount);
 }
